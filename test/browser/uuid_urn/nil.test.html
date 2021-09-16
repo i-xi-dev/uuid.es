@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>test</title>
+    <script type="module">
+import test from "../test.mjs";
+import { UuidUrn } from "../../../dist/index.js";
+
+test.it("nil()", () => {
+  test.assert.strictEqual(UuidUrn.nil(), "urn:uuid:00000000-0000-0000-0000-000000000000");
+
+});
+
+test.exec();
+    </script>
+  </head>
+  <body>
+  </body>
+</html>
