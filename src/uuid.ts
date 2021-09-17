@@ -16,7 +16,7 @@ interface Uuid {
   /**
    * @returns A string that represents the nil UUID.
    */
-  nil(): string;
+  NIL: string;
 }
 
 type Fields = [ Uint8Array, Uint8Array, Uint8Array, Uint8Array, Uint8Array ];
@@ -51,18 +51,7 @@ const Uuid: Uuid = {
     return fieldsToString(fields);
   },
 
-  nil(): string {
-    const fields = fieldsOf(new Uint8Array(16));
-    return fieldsToString(fields);
-  },
-
-  // validate(uuidString: string, options: ): boolean {
-  //   if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(uuidString) !== true) {
-  //     return false;
-  //   }
-  //
-  // },
-
+  NIL: fieldsToString(fieldsOf(new Uint8Array(16))),
 };
 Object.freeze(Uuid);
 
@@ -70,14 +59,10 @@ const URN_PREFIX = "urn:uuid:";
 
 const UuidUrn: Uuid = {
   generateRandom(): string {
-    const uuidString = Uuid.generateRandom();
-    return URN_PREFIX + uuidString;
+    return URN_PREFIX + Uuid.generateRandom();
   },
 
-  nil(): string {
-    const uuidString = Uuid.nil();
-    return URN_PREFIX + uuidString;
-  },
+  NIL: URN_PREFIX + Uuid.NIL,
 };
 Object.freeze(UuidUrn);
 
