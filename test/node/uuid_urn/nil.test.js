@@ -1,5 +1,5 @@
 import assert from "node:assert";
-import { UuidUrn } from "../../../node.mjs";
+import { UuidUrn } from "../../../node/index.mjs";
 
 describe("UuidUrn.NIL", () => {
   it("NIL", () => {

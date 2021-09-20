@@ -7,7 +7,7 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "node": "./node.mjs",
+      "node": "./node/index.mjs",
       "default": "./dist/index.js"
     }
   },
@@ -36,7 +36,7 @@
   "homepage": "https://github.com/i-xi-dev/uuid.es#readme",
   "files": [
     "dist",
-    "node.mjs"
+    "node"
   ],
   "engines": {
     "node": ">=16.5.0"
