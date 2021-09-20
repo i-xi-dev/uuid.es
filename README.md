@@ -18,7 +18,7 @@ import { Uuid } from "@i-xi-dev/uuid";
 ### CDN
 
 ```javascript
-import { Uuid } from "https://unpkg.com/@i-xi-dev/uuid";
+import { Uuid } from "https://unpkg.com/@i-xi-dev/uuid/dist/index.js";
 ```
 
 
