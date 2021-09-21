@@ -25,5 +25,5 @@ import { Uuid } from "https://unpkg.com/@i-xi-dev/uuid/dist/index.js";
 ## Usage
 ```javascript
 const uuid = Uuid.generateRandom();
-// → random UUID string, foie example "5eb893ba-ec79-4f55-958d-66731227b662"
+// → random UUID string, for example "5eb893ba-ec79-4f55-958d-66731227b662"
 ```
