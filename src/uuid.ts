@@ -1,24 +1,5 @@
 //
 
-/**
- * UUID
- * 
- * Implements version 4 UUID and Nil UUID.
- * 
- * @see {@link https://datatracker.ietf.org/doc/html/rfc4122 RFC 4122}
- */
-interface Uuid {
-  /**
-   * @returns A string that represents the version 4 UUID.
-   */
-  generateRandom(): string;
-
-  /**
-   * @returns A string that represents the nil UUID.
-   */
-  NIL: string;
-}
-
 type Fields = [ Uint8Array, Uint8Array, Uint8Array, Uint8Array, Uint8Array ];
 
 function fieldsOf(bytes: Uint8Array): Readonly<Fields> {
@@ -37,7 +18,17 @@ function fieldsToString(fields: Readonly<Fields>): string {
   }).join("-");
 }
 
-const Uuid: Uuid = {
+/**
+ * UUID
+ * 
+ * Implements version 4 UUID.
+ * 
+ * @see {@link https://datatracker.ietf.org/doc/html/rfc4122 RFC 4122}
+ */
+const Uuid = {
+  /**
+   * @returns A string that represents the version 4 UUID.
+   */
   generateRandom(): string {
     const randomBytes = globalThis.crypto.getRandomValues(new Uint8Array(16));
     const fields = fieldsOf(randomBytes);
@@ -50,23 +41,9 @@ const Uuid: Uuid = {
 
     return fieldsToString(fields);
   },
-
-  NIL: fieldsToString(fieldsOf(new Uint8Array(16))),
 };
 Object.freeze(Uuid);
 
-const URN_PREFIX = "urn:uuid:";
-
-const UuidUrn: Uuid = {
-  generateRandom(): string {
-    return URN_PREFIX + Uuid.generateRandom();
-  },
-
-  NIL: URN_PREFIX + Uuid.NIL,
-};
-Object.freeze(UuidUrn);
-
 export {
   Uuid,
-  UuidUrn,
 };

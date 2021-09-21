@@ -21,6 +21,10 @@ import { Uuid } from "@i-xi-dev/uuid";
 import { Uuid } from "https://unpkg.com/@i-xi-dev/uuid/dist/index.js";
 ```
 
+```javascript
+import { Uuid } from "https://cdn.jsdelivr.net/npm/@i-xi-dev/uuid/dist/index.js";
+```
+
 
 ## Usage
 ```javascript

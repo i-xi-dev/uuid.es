@@ -1,3 +1,3 @@
 //
 
-export { Uuid, UuidUrn } from "./uuid.js";
+export { Uuid } from "./uuid.js";
