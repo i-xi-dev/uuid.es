@@ -18,6 +18,10 @@ import { Uuid } from "@i-xi-dev/uuid";
 ### CDN
 
 ```javascript
+import { Uuid } from "https://cdn.skypack.dev/@i-xi-dev/uuid";
+```
+
+```javascript
 import { Uuid } from "https://unpkg.com/@i-xi-dev/uuid/dist/index.js";
 ```
 
