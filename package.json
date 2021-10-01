@@ -1,6 +1,6 @@
 {
   "name": "@i-xi-dev/uuid",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A JavaScript UUID generator, implements the version 4 UUID defined in RFC 4122.",
   "type": "module",
   "main": "./dist/index.js",
@@ -42,11 +42,11 @@
     "node": ">=16.5.0"
   },
   "devDependencies": {
-    "@types/node": "^16.9.6",
-    "@typescript-eslint/eslint-plugin": "^4.31.2",
-    "@typescript-eslint/parser": "^4.31.2",
+    "@types/node": "^16.10.2",
+    "@typescript-eslint/eslint-plugin": "^4.32.0",
+    "@typescript-eslint/parser": "^4.32.0",
     "eslint": "^7.32.0",
-    "mocha": "^9.1.1",
+    "mocha": "^9.1.2",
     "typescript": "^4.4.3"
   },
   "publishConfig": {
