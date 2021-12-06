@@ -23,7 +23,7 @@ function fieldsToString(fields: Readonly<Fields>): string {
  * 
  * Implements version 4 UUID.
  * 
- * @see {@link https://datatracker.ietf.org/doc/html/rfc4122 RFC 4122}
+ * @see {@link [RFC 4122](https://datatracker.ietf.org/doc/html/rfc4122)}
  */
 const Uuid = {
   /**
