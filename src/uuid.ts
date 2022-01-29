@@ -106,14 +106,38 @@ class Uuid {
     return false;
   }
 
+  get type(): number {
+    const byte8 = this.#clockSeqAndReserved.getUint8View()[0] as uint8;
+    if ((byte8 & 0b11100000) === 0b11100000) {
+      return 7;
+    }
+    else if ((byte8 & 0b11000000) === 0b11000000) {
+      return 6;
+    }
+    else if ((byte8 & 0b10000000) === 0b10000000) {
+      return 2;
+    }
+    else { // if ((byte8 & 0b00000000) === 0b00000000) {
+      return 0;
+    }
+  }
 
+  get variant(): number {
+    return this.type;
+  }
 
+  get version(): number {
+    if (this.type === 2) {
 
-  // get version(): number {
+    }
+    else {
+      return Number.NaN;
+    }
+  }
 
-  // }
-
-  // // variant
+  get subtype(): number {
+    return this.version;
+  }
 
 
   /**
