@@ -188,7 +188,7 @@ class Uuid {
   }
 
   /**
-   * Returns a string that represents the UUID.
+   * The alias for the `toString` method.
    * 
    * @returns A string that represents the UUID.
    */
