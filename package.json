@@ -1,6 +1,6 @@
 {
   "name": "@i-xi-dev/uuid",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "A JavaScript UUID generator, implements the version 4 UUID defined in RFC 4122.",
   "type": "module",
   "main": "./dist/index.js",

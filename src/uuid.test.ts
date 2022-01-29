@@ -123,6 +123,15 @@ describe("Uuid.prototype.format", () => {
 
 });
 
+describe("Uuid.toJSON", () => {
+  it("toJSON()", () => {
+    const uuid = Uuid.fromString("00000000-0000-0000-0000-000000000000");
+    assert.strictEqual(uuid.toJSON(), "00000000-0000-0000-0000-000000000000");
+
+  });
+
+});
+
 describe("Uuid.toURN", () => {
   it("toURN()", () => {
     const uuid = Uuid.fromString("00000000-0000-0000-0000-000000000000");

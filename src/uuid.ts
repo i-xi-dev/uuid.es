@@ -188,6 +188,15 @@ class Uuid {
   }
 
   /**
+   * Returns a string that represents the UUID.
+   * 
+   * @returns A string that represents the UUID.
+   */
+  toJSON(): string {
+    return this.toString();
+  }
+
+  /**
    * Returns an URN that represents the UUID.
    * 
    * @returns An URN that represents the UUID.
