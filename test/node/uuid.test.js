@@ -1,5 +1,5 @@
 import assert from "node:assert";
-import { Uuid } from "./uuid";
+import { Uuid } from "../../node/index.mjs";
 
 describe("Uuid.nil", () => {
   it("nil()", () => {
@@ -88,7 +88,7 @@ describe("Uuid.fromString", () => {
 
   it("fromString(*)", () => {
     assert.throws(() => {
-      Uuid.fromString(1 as unknown as string);
+      Uuid.fromString(1);
     }, {
       name: "TypeError",
       message: "uuidString"
@@ -226,7 +226,7 @@ describe("Uuid.prototype.equals", () => {
   it("equals(*)", () => {
     const uuid0 = Uuid.nil();
     assert.throws(() => {
-      uuid0.equals(0 as unknown as string);
+      uuid0.equals(0);
     }, {
       name: "TypeError",
       message: "other"

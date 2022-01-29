@@ -37,12 +37,12 @@ class Uuid {
   #node: ByteSequence;
 
   private constructor(bytes: ByteSequence) {
-    if ((bytes instanceof ByteSequence) !== true) {
-      throw new TypeError("bytes");
-    }
-    if (bytes.byteLength !== 16) {
-      throw new RangeError("bytes");
-    }
+    // if ((bytes instanceof ByteSequence) !== true) {
+    //   throw new TypeError("bytes");
+    // }
+    // if (bytes.byteLength !== 16) {
+    //   throw new RangeError("bytes");
+    // }
     this.#bytes = bytes;
     this.#timeLow = ByteSequence.fromArrayBufferView(bytes.getUint8View(0, 4));
     this.#timeMid = ByteSequence.fromArrayBufferView(bytes.getUint8View(4, 2));
@@ -108,7 +108,7 @@ class Uuid {
    * The alias for the `subtype` getter.
    */
   get version(): number {
-    return this.version;
+    return this.subtype;
   }
 
   /**
