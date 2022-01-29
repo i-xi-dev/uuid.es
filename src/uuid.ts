@@ -142,8 +142,8 @@ class Uuid {
    * Creates an `Uuid` object from a string that represents the UUID.
    * 
    * @returns An `Uuid` object.
- * @throws {TypeError} The `uuidString` is not type of string.
- * @throws {RangeError} The `uuidString` is not reperesent the UUID.
+   * @throws {TypeError} The `uuidString` is not type of string.
+   * @throws {RangeError} The `uuidString` is not reperesent the UUID.
    */
   static fromString(uuidString: string): Uuid {
     if (typeof uuidString !== "string") {
