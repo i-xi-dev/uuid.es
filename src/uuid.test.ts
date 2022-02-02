@@ -118,6 +118,9 @@ describe("Uuid.prototype.format", () => {
     assert.strictEqual(uuid.format({upperCase:true}), "4525970B-49CB-4D89-9987-54BA4263AC99");
     assert.strictEqual(uuid.format({hyphenate:false}), "4525970b49cb4d89998754ba4263ac99");
     assert.strictEqual(uuid.format({upperCase:true,hyphenate:false}), "4525970B49CB4D89998754BA4263AC99");
+    assert.strictEqual(uuid.format({upperCase:true,noHyphens:true}), "4525970B49CB4D89998754BA4263AC99");
+    assert.strictEqual(uuid.format({upperCase:true,hyphenate:true,noHyphens:true}), "4525970B49CB4D89998754BA4263AC99");
+    assert.strictEqual(uuid.format({upperCase:true,hyphenate:false,noHyphens:false}), "4525970B-49CB-4D89-9987-54BA4263AC99");
 
   });
 
