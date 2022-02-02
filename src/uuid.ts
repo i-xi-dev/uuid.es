@@ -15,8 +15,18 @@ type UuidFormatOptions = {
 
   /**
    * Whether to use hyphens to join fields.
+   * The default is `true`.
+   * `hyphenate` is ignored if `noHyphens` is specified.
+   * 
+   * @deprecated
    */
   hyphenate?: boolean;
+
+  /**
+   * Whether to omit hyphens to join fields.
+   * The default is `false`.
+   */
+  noHyphens?: boolean;
 };
 
 /**
@@ -166,8 +176,14 @@ class Uuid {
    */
   format(options: UuidFormatOptions = {}): string {
     const upperCase = (typeof options?.upperCase === "boolean") ? options.upperCase : false;
-    const hyphenate = (typeof options?.hyphenate === "boolean") ? options.hyphenate : true;
-    const separator = (hyphenate === true) ? "-" : "";
+    let noHyphens: boolean;
+    if ((typeof options?.hyphenate === "boolean") && (("noHyphens" in options) !== true)) {
+      noHyphens = !options.hyphenate;
+    }
+    else {
+      noHyphens = (typeof options?.noHyphens === "boolean") ? options.noHyphens : false;
+    }
+    const separator = (noHyphens === true) ? "" : "-";
 
     return [
       this.#timeLow.format({ upperCase }),
