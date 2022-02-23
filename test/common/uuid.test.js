@@ -1,5 +1,10 @@
 import { expect } from '@esm-bundle/chai';
-import { Uuid } from "./uuid";
+import { Uuid } from "../../dist/index.js";
+
+if (globalThis.process) {
+  const nodeCrypto = await import("node:crypto");
+  globalThis.crypto = nodeCrypto.webcrypto;
+}
 
 describe("Uuid.nil", () => {
   it("nil()", () => {
@@ -88,7 +93,7 @@ describe("Uuid.fromString", () => {
 
   it("fromString(*)", () => {
     expect(() => {
-      Uuid.fromString(1 as unknown as string);
+      Uuid.fromString(1);
     }).to.throw(TypeError, "uuidString").with.property("name", "TypeError");
 
     expect(() => {
@@ -232,7 +237,7 @@ describe("Uuid.prototype.equals", () => {
   it("equals(*)", () => {
     const uuid0 = Uuid.nil();
     expect(() => {
-      uuid0.equals(0 as unknown as string);
+      uuid0.equals(0);
     }).to.throw(TypeError, "other").with.property("name", "TypeError");
 
   });
