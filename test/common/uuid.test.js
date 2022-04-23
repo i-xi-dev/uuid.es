@@ -115,11 +115,8 @@ describe("Uuid.prototype.format", () => {
     const uuid = Uuid.fromString("4525970B49CB4D89998754BA4263AC99");
     expect(uuid.format({})).to.equal("4525970b-49cb-4d89-9987-54ba4263ac99");
     expect(uuid.format({upperCase:true})).to.equal("4525970B-49CB-4D89-9987-54BA4263AC99");
-    expect(uuid.format({hyphenate:false})).to.equal("4525970b49cb4d89998754ba4263ac99");
-    expect(uuid.format({upperCase:true,hyphenate:false})).to.equal("4525970B49CB4D89998754BA4263AC99");
     expect(uuid.format({upperCase:true,noHyphens:true})).to.equal("4525970B49CB4D89998754BA4263AC99");
-    expect(uuid.format({upperCase:true,hyphenate:true,noHyphens:true})).to.equal("4525970B49CB4D89998754BA4263AC99");
-    expect(uuid.format({upperCase:true,hyphenate:false,noHyphens:false})).to.equal("4525970B-49CB-4D89-9987-54BA4263AC99");
+    expect(uuid.format({upperCase:true,noHyphens:false})).to.equal("4525970B-49CB-4D89-9987-54BA4263AC99");
 
   });
 
