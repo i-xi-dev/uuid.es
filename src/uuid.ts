@@ -179,12 +179,15 @@ class Uuid {
     }
     const separator = (noHyphens === true) ? "" : "-";
 
+    const bytesOptions = {
+      lowerCase: !upperCase,
+    };
     return [
-      this.#timeLow.format({ upperCase }),
-      this.#timeMid.format({ upperCase }),
-      this.#timeHighAndVersion.format({ upperCase }),
-      this.#clockSeqAndReserved.format({ upperCase }) + this.#clockSeqLow.format({ upperCase }),
-      this.#node.format({ upperCase }),
+      this.#timeLow.format(bytesOptions),
+      this.#timeMid.format(bytesOptions),
+      this.#timeHighAndVersion.format(bytesOptions),
+      this.#clockSeqAndReserved.format(bytesOptions) + this.#clockSeqLow.format(bytesOptions),
+      this.#node.format(bytesOptions),
     ].join(separator);
   }
 
