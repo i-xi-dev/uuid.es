@@ -10,12 +10,11 @@ A JavaScript UUID generator, implements the version 4 UUID defined in [RFC 4122]
 
 ## Requirement
 
-- Chrome
-- Edge
-- Firefox
-- Safari
-- Deno
-- Node.js 15.0.0+
+This module delegates the random bytes generation to the [`Crypto`](https://developer.mozilla.org/en-US/docs/Web/API/Crypto).
+
+| Chrome | Edge | Firefox | Safari | Deno | Node.js |
+| :---: | :---: | :---: | :---: | :---: | :---: |
+| ✅ | ✅ | ✅ | ✅ | ✅ | ✅<br />15.0.0+ |
 
 
 ## Installation
@@ -27,14 +26,14 @@ $ npm i @i-xi-dev/uuid
 ```
 
 ```javascript
-import { Uuid } from "@i-xi-dev/uuid";
+import { Uuid } from "@i-xi-dev/uuid@3.0.2";
 ```
 
 ### CDN
 
 Example for Skypack
 ```javascript
-import { Uuid } from "https://cdn.skypack.dev/@i-xi-dev/uuid";
+import { Uuid } from "https://cdn.skypack.dev/@i-xi-dev/uuid@3.0.2";
 ```
 
 
