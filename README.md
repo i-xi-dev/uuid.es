@@ -3,11 +3,6 @@
 A JavaScript UUID generator, implements the version 4 UUID defined in [RFC 4122](https://datatracker.ietf.org/doc/rfc4122/).
 
 
-## Documentation
-
-[https://i-xi-dev.github.io/uuid.es/](https://i-xi-dev.github.io/uuid.es/)
-
-
 ## Requirement
 
 This module delegates the random bytes generation to the [`Crypto`](https://developer.mozilla.org/en-US/docs/Web/API/Crypto).
@@ -26,20 +21,20 @@ $ npm i @i-xi-dev/uuid
 ```
 
 ```javascript
-import { Uuid } from "@i-xi-dev/uuid@3.0.2";
+import { Uuid } from "@i-xi-dev/uuid@3.0.3";
 ```
 
 ### CDN
 
 Example for Skypack
 ```javascript
-import { Uuid } from "https://cdn.skypack.dev/@i-xi-dev/uuid@3.0.2";
+import { Uuid } from "https://cdn.skypack.dev/@i-xi-dev/uuid@3.0.3";
 ```
 
 
 ## Usage
 
-### `Uuid` class
+### [`Uuid`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/uuid.es/3.0.3/mod.ts/~/Uuid) class
 
 #### Creates a version 4 UUID
 ```javascript
