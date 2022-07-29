@@ -1,8 +1,11 @@
-import { build, emptyDir } from "https://deno.land/x/dnt@0.23.0/mod.ts";
+import { build, emptyDir } from "https://deno.land/x/dnt@0.29.0/mod.ts";
 
 await emptyDir("./npm");
 
 await build({
+  compilerOptions: {
+    lib: ["esnext", "dom"],
+  },
   entryPoints: ["./mod.ts"],
   outDir: "./npm",
   shims: {
@@ -12,7 +15,7 @@ await build({
   rootTestDir: "./tests",
   package: {
     name: "@i-xi-dev/uuid",
-    version: "3.0.3",
+    version: "3.0.4",
     description: "A JavaScript UUID generator, implements the version 4 UUID defined in RFC 4122.",
     license: "MIT",
     author: "i-xi-dev",

@@ -21,20 +21,20 @@ $ npm i @i-xi-dev/uuid
 ```
 
 ```javascript
-import { Uuid } from "@i-xi-dev/uuid@3.0.3";
+import { Uuid } from "@i-xi-dev/uuid@3.0.4";
 ```
 
 ### CDN
 
 Example for Skypack
 ```javascript
-import { Uuid } from "https://cdn.skypack.dev/@i-xi-dev/uuid@3.0.3";
+import { Uuid } from "https://cdn.skypack.dev/@i-xi-dev/uuid@3.0.4";
 ```
 
 
 ## Usage
 
-### [`Uuid`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/uuid.es/3.0.3/mod.ts/~/Uuid) class
+### [`Uuid`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/uuid.es/3.0.4/mod.ts/~/Uuid) class
 
 #### Creates a version 4 UUID
 ```javascript
