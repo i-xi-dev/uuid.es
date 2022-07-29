@@ -16,7 +16,8 @@ await build({
   package: {
     name: "@i-xi-dev/uuid",
     version: "3.0.4",
-    description: "A JavaScript UUID generator, implements the version 4 UUID defined in RFC 4122.",
+    description:
+      "A JavaScript UUID generator, implements the version 4 UUID defined in RFC 4122.",
     license: "MIT",
     author: "i-xi-dev",
     homepage: "https://github.com/i-xi-dev/uuid.es#readme",
@@ -29,20 +30,20 @@ await build({
     ],
     repository: {
       type: "git",
-      url: "git+https://github.com/i-xi-dev/uuid.es.git"
+      url: "git+https://github.com/i-xi-dev/uuid.es.git",
     },
     bugs: {
-      url: "https://github.com/i-xi-dev/uuid.es/issues"
+      url: "https://github.com/i-xi-dev/uuid.es/issues",
     },
     publishConfig: {
-      access: "public"
+      access: "public",
     },
     files: [
       "esm",
-      "types"
+      "types",
     ],
   },
-  importMap: "./import_map.json"
+  importMap: "./import_map.json",
 });
 
 Deno.copyFileSync("LICENSE", "npm/LICENSE");
