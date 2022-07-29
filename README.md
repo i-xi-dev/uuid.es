@@ -17,11 +17,11 @@ This module delegates the random bytes generation to the [`Crypto`](https://deve
 ### npm
 
 ```console
-$ npm i @i-xi-dev/uuid
+$ npm i @i-xi-dev/uuid@3.0.4
 ```
 
 ```javascript
-import { Uuid } from "@i-xi-dev/uuid@3.0.4";
+import { Uuid } from "@i-xi-dev/uuid";
 ```
 
 ### CDN
