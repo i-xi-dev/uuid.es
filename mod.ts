@@ -1,6 +1,6 @@
-import { type uint8 } from "https://raw.githubusercontent.com/i-xi-dev/int.es/1.1.1/mod.ts";
-import { _crypto } from "https://raw.githubusercontent.com/i-xi-dev/compat.es/1.1.1/mod.ts";
-import { BytesFormat } from "https://raw.githubusercontent.com/i-xi-dev/bytes-format.es/1.0.5/mod.ts";
+import { type uint8 } from "i-xi-dev/int.es";
+import { _crypto } from "i-xi-dev/compat.es";
+import { BytesFormat } from "i-xi-dev/bytes-format.es";
 
 /**
  * The object representation of UUID.
