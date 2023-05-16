@@ -43,7 +43,6 @@ await build({
       "types",
     ],
   },
-  importMap: "./import_map.json",
 
   //
   typeCheck: false, // 落ちるようになった

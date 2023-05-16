@@ -1,6 +1,4 @@
-import { type uint8 } from "i-xi-dev/int.es";
-import { _crypto } from "i-xi-dev/compat.es";
-import { BytesFormat } from "i-xi-dev/bytes-format.es";
+import { _crypto, BytesFormat, type uint8 } from "../deps.ts";
 
 /**
  * The object representation of UUID.

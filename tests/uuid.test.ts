@@ -2,7 +2,7 @@ import {
   assertEquals,
   assertStrictEquals,
   assertThrows,
-} from "std/testing/asserts";
+} from "./deps.ts";
 import { Uuid } from "../mod.ts";
 
 Deno.test("Uuid.nil()", () => {
