@@ -1,4 +1,4 @@
-import { build, emptyDir } from "https://deno.land/x/dnt@0.37.0/mod.ts";
+import { build, emptyDir } from "https://deno.land/x/dnt@0.38.0/mod.ts";
 
 await emptyDir("./npm");
 
@@ -15,7 +15,7 @@ await build({
   rootTestDir: "./tests",
   package: {
     name: "@i-xi-dev/uuid",
-    version: "3.0.6",
+    version: "3.0.7",
     description:
       "A JavaScript UUID generator, implements the version 4 UUID defined in RFC 4122.",
     license: "MIT",

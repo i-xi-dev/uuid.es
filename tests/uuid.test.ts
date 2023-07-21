@@ -1,8 +1,4 @@
-import {
-  assertEquals,
-  assertStrictEquals,
-  assertThrows,
-} from "./deps.ts";
+import { assertEquals, assertStrictEquals, assertThrows } from "./deps.ts";
 import { Uuid } from "../mod.ts";
 
 Deno.test("Uuid.nil()", () => {
