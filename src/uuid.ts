@@ -1,4 +1,4 @@
-import { _crypto, BytesFormat, type uint8 } from "../deps.ts";
+import { _crypto, BytesFormat, Uint8 } from "../deps.ts";
 
 /**
  * The object representation of UUID.
@@ -32,7 +32,7 @@ class Uuid {
    * Gets the [variant](https://datatracker.ietf.org/doc/html/rfc4122#section-4.1.1) of this UUID.
    */
   get type(): number {
-    const byte8 = this.#clockSeqAndReserved[0] as uint8;
+    const byte8 = this.#clockSeqAndReserved[0] as Uint8;
     if ((byte8 & 0b11100000) === 0b11100000) {
       return 7;
     } else if ((byte8 & 0b11000000) === 0b11000000) {
@@ -56,7 +56,7 @@ class Uuid {
    */
   get subtype(): number {
     if (this.type === 2) {
-      const byte6 = this.#timeHighAndVersion[0] as uint8;
+      const byte6 = this.#timeHighAndVersion[0] as Uint8;
       if ((byte6 & 0b01010000) === 0b01010000) {
         return 5;
       } else if ((byte6 & 0b01000000) === 0b01000000) {
@@ -97,10 +97,10 @@ class Uuid {
     const randomBytes = _crypto.getRandomValues(new Uint8Array(16));
 
     // timeHighAndVersionの先頭4ビット（7バイト目の上位4ビット）は0100₂固定（13桁目の文字列表現は"4"固定）
-    randomBytes[6] = (randomBytes[6] as uint8) & 0x0F | 0x40;
+    randomBytes[6] = (randomBytes[6] as Uint8) & 0x0F | 0x40;
 
     // clockSeqAndReservedの先頭2ビット（9バイト目の上位2ビット）は10₂固定（17桁目の文字列表現は"8","9","A","B"のどれか）
-    randomBytes[8] = (randomBytes[8] as uint8) & 0x3F | 0x80;
+    randomBytes[8] = (randomBytes[8] as Uint8) & 0x3F | 0x80;
 
     return new Uuid(randomBytes);
   }
