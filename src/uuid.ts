@@ -1,4 +1,4 @@
-import { _crypto, BytesFormat, Uint8 } from "../deps.ts";
+import { _crypto, ByteSequence, BytesFormat, Digest, Uint8 } from "../deps.ts";
 
 /**
  * The object representation of UUID.
@@ -9,23 +9,35 @@ import { _crypto, BytesFormat, Uint8 } from "../deps.ts";
  * @see [RFC 4122](https://datatracker.ietf.org/doc/html/rfc4122)
  */
 class Uuid {
-  #bytes: Uint8Array;
-  #timeLow: Uint8Array;
-  #timeMid: Uint8Array;
-  #timeHighAndVersion: Uint8Array;
-  #clockSeqAndReserved: Uint8Array;
-  #clockSeqLow: Uint8Array;
-  #node: Uint8Array;
+  readonly #bytes: ByteSequence;
 
   private constructor(bytes: Uint8Array) {
-    this.#bytes = bytes;
-    this.#timeLow = bytes.subarray(0, 4);
-    this.#timeMid = bytes.subarray(4, 6);
-    this.#timeHighAndVersion = bytes.subarray(6, 8);
-    this.#clockSeqAndReserved = bytes.subarray(8, 9);
-    this.#clockSeqLow = bytes.subarray(9, 10);
-    this.#node = bytes.subarray(10);
+    this.#bytes = ByteSequence.fromArrayBufferView(bytes);
     Object.freeze(this);
+  }
+
+  get #timeLow(): Uint8Array {
+    return Uint8Array.from(this.#bytes.getUint8View(0, 4));
+  }
+
+  get #timeMid(): Uint8Array {
+    return Uint8Array.from(this.#bytes.getUint8View(4, 2));
+  }
+
+  get #timeHighAndVersion(): Uint8Array {
+    return Uint8Array.from(this.#bytes.getUint8View(6, 2));
+  }
+
+  get #clockSeqAndReserved(): Uint8Array {
+    return Uint8Array.from(this.#bytes.getUint8View(8, 1));
+  }
+
+  get #clockSeqLow(): Uint8Array {
+    return Uint8Array.from(this.#bytes.getUint8View(9, 1));
+  }
+
+  get #node(): Uint8Array {
+    return Uint8Array.from(this.#bytes.getUint8View(10));
   }
 
   /**
@@ -105,6 +117,50 @@ class Uuid {
     return new Uuid(randomBytes);
   }
 
+  static async fromName(namespace: (string | Uuid), name: string): Promise<Uuid> {
+    let namespaceBytes: Uint8Array | null = null;
+    if (namespace instanceof Uuid) {
+      namespaceBytes = namespace.#toUint8Array();
+    }
+    else if (typeof namespace === "string") {
+      try {
+        const namespaceUuid = Uuid.fromString(namespace);
+        namespaceBytes = namespaceUuid.#toUint8Array();
+      }
+      catch {
+        throw new RangeError("namespace");
+      }
+    }
+    else {
+      throw new TypeError("namespace");
+    }
+
+    if (typeof name !== "string") {
+      throw new TypeError("name");
+    }
+    const nameBytes = ByteSequence.fromText(name).toUint8Array();
+
+    const bytes = new Uint8Array(namespaceBytes.length + nameBytes.length);
+    for (let i = 0; i < namespaceBytes.length; i++) {
+      bytes[i] = namespaceBytes[i];
+    }
+    const offset = namespaceBytes.length;
+    for (let i = 0; i < nameBytes.length; i++) {
+      bytes[offset + i] = nameBytes[i];
+    }
+
+    //TODO optionsでMD5かSHA-1選択可にする
+    const digestBytes = await Digest.Sha1.compute(bytes);
+
+    // timeHighAndVersionの先頭4ビット（7バイト目の上位4ビット）は0101₂固定（13桁目の文字列表現は"5"固定）
+    digestBytes[6] = (digestBytes[6] as Uint8) & 0x0F | 0x50;
+
+    // clockSeqAndReservedの先頭2ビット（9バイト目の上位2ビット）は10₂固定（17桁目の文字列表現は"8","9","A","B"のどれか）
+    digestBytes[8] = (digestBytes[8] as Uint8) & 0x3F | 0x80;
+
+    return new Uuid(digestBytes);
+  }
+
   /**
    * Creates an `Uuid` object from a string that represents the UUID.
    *
@@ -135,7 +191,7 @@ class Uuid {
    * @param options - The `UuidFormat.Options` dictionary.
    * @returns A string representation of this UUID.
    */
-  format(options: UuidFormat.Options = {}): string {
+  format(options: Uuid.FormatOptions = {}): string {
     const upperCase = (typeof options?.upperCase === "boolean")
       ? options.upperCase
       : false;
@@ -154,7 +210,7 @@ class Uuid {
       BytesFormat.format(this.#clockSeqAndReserved, bytesOptions) +
       BytesFormat.format(this.#clockSeqLow, bytesOptions),
       BytesFormat.format(this.#node, bytesOptions),
-    ].join(separator);
+    ].join(separator);//TODO #bytes.format()の結果に"-"を差し込めばいい
   }
 
   /**
@@ -184,6 +240,10 @@ class Uuid {
     return new URL("urn:uuid:" + this.toString());
   }
 
+  #toUint8Array(): Uint8Array {
+    return this.#bytes.toUint8Array();
+  }
+
   /**
    * Determines whether this UUID is equal to the UUID represented by another object.
    *
@@ -193,11 +253,11 @@ class Uuid {
    */
   equals(other: Uuid | string): boolean {
     if (other instanceof Uuid) {
-      return _isSameBytes(this.#bytes, other.#bytes);
+      return this.#bytes.equals(other.#bytes);
     } else if (typeof other === "string") {
       try {
         const otherUuid = Uuid.fromString(other);
-        return _isSameBytes(this.#bytes, otherUuid.#bytes);
+        return this.#bytes.equals(otherUuid.#bytes);
       } catch {
         return false;
       }
@@ -205,13 +265,12 @@ class Uuid {
     throw new TypeError("other");
   }
 }
-Object.freeze(Uuid);
 
-namespace UuidFormat {
+namespace Uuid {
   /**
    * The object with the following optional fields.
    */
-  export type Options = {
+  export type FormatOptions = {
     /**
      * Whether the formatted string is uppercase or not.
      * The default is `false`.
@@ -224,25 +283,13 @@ namespace UuidFormat {
      */
     noHyphens?: boolean;
   };
+
+  export const Namespace = {
+    DNS: Uuid.fromString("6ba7b810-9dad-11d1-80b4-00c04fd430c8"),
+    URL: Uuid.fromString("6ba7b811-9dad-11d1-80b4-00c04fd430c8"),
+    OID: Uuid.fromString("6ba7b812-9dad-11d1-80b4-00c04fd430c8"),
+    X500: Uuid.fromString("6ba7b814-9dad-11d1-80b4-00c04fd430c8"),
+  } as const;
 }
 
-function _isSameBytes(bytesA: Uint8Array, bytesB: Uint8Array): boolean {
-  if ((bytesA instanceof Uint8Array) !== true) {
-    throw new TypeError("bytesA");
-  }
-  if ((bytesB instanceof Uint8Array) !== true) {
-    throw new TypeError("bytesB");
-  }
-
-  if (bytesA.length !== bytesB.length) {
-    return false;
-  }
-  for (let i = 0; i < bytesA.length; i++) {
-    if (bytesA[i] !== bytesB[i]) {
-      return false;
-    }
-  }
-  return true;
-}
-
-export { Uuid, type UuidFormat };
+export { Uuid };
