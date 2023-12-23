@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Parse UUID</title>
+    <link href="./asset/base.css?3.0.15" rel="stylesheet" />
+    <script src="./asset/parse.mjs?3.0.15" type="module"></script>
+  </head>
+
+  <body>
+    <section>
+      <h1>Input</h1>
+
+      <dl>
+        <div>
+          <dt>[1]: UUID as string</dt>
+          <dd>
+            <input id="i1" type="text" />
+            <div>
+              <button id="i1a1">generate random UUID</button>
+              <button id="i1a2">generate nil UUID</button>
+            </div>
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+    <div>
+      <button id="a1">Parse</button>
+    </div>
+
+    <section>
+      <h1>Output</h1>
+      <dl>
+        <div>
+          <dt>[2]: variant of [1]</dt>
+          <dd>
+            <output id="o1"></output>
+          </dd>
+        </div>
+
+        <div>
+          <dt>[3]: version of [1]</dt>
+          <dd>
+            <output id="o2"></output>
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+    <div class="progress">
+      <progress></progress>
+    </div>
+  </body>
+</html>

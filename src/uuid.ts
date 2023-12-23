@@ -117,49 +117,47 @@ class Uuid {
     return new Uuid(randomBytes);
   }
 
-  static async fromName(namespace: (string | Uuid), name: string): Promise<Uuid> {
-    let namespaceBytes: Uint8Array | null = null;
-    if (namespace instanceof Uuid) {
-      namespaceBytes = namespace.#toUint8Array();
-    }
-    else if (typeof namespace === "string") {
-      try {
-        const namespaceUuid = Uuid.fromString(namespace);
-        namespaceBytes = namespaceUuid.#toUint8Array();
-      }
-      catch {
-        throw new RangeError("namespace");
-      }
-    }
-    else {
-      throw new TypeError("namespace");
-    }
+  // /** @experimental */
+  // static async fromName(namespace: string | Uuid, name: string): Promise<Uuid> {
+  //   let namespaceBytes: Uint8Array | null = null;
+  //   if (namespace instanceof Uuid) {
+  //     namespaceBytes = namespace.#toUint8Array();
+  //   } else if (typeof namespace === "string") {
+  //     try {
+  //       const namespaceUuid = Uuid.fromString(namespace);
+  //       namespaceBytes = namespaceUuid.#toUint8Array();
+  //     } catch {
+  //       throw new RangeError("namespace");
+  //     }
+  //   } else {
+  //     throw new TypeError("namespace");
+  //   }
 
-    if (typeof name !== "string") {
-      throw new TypeError("name");
-    }
-    const nameBytes = ByteSequence.fromText(name).toUint8Array();
+  //   if (typeof name !== "string") {
+  //     throw new TypeError("name");
+  //   }
+  //   const nameBytes = ByteSequence.fromText(name).toUint8Array();
 
-    const bytes = new Uint8Array(namespaceBytes.length + nameBytes.length);
-    for (let i = 0; i < namespaceBytes.length; i++) {
-      bytes[i] = namespaceBytes[i];
-    }
-    const offset = namespaceBytes.length;
-    for (let i = 0; i < nameBytes.length; i++) {
-      bytes[offset + i] = nameBytes[i];
-    }
+  //   const bytes = new Uint8Array(namespaceBytes.length + nameBytes.length);
+  //   for (let i = 0; i < namespaceBytes.length; i++) {
+  //     bytes[i] = namespaceBytes[i];
+  //   }
+  //   const offset = namespaceBytes.length;
+  //   for (let i = 0; i < nameBytes.length; i++) {
+  //     bytes[offset + i] = nameBytes[i];
+  //   }
 
-    //TODO optionsでMD5かSHA-1選択可にする
-    const digestBytes = await Digest.Sha1.compute(bytes);
+  //   //TODO optionsでMD5かSHA-1選択可にする
+  //   const digestBytes = await Digest.Sha1.compute(bytes);
 
-    // timeHighAndVersionの先頭4ビット（7バイト目の上位4ビット）は0101₂固定（13桁目の文字列表現は"5"固定）
-    digestBytes[6] = (digestBytes[6] as Uint8) & 0x0F | 0x50;
+  //   // timeHighAndVersionの先頭4ビット（7バイト目の上位4ビット）は0101₂固定（13桁目の文字列表現は"5"固定）
+  //   digestBytes[6] = (digestBytes[6] as Uint8) & 0x0F | 0x50;
 
-    // clockSeqAndReservedの先頭2ビット（9バイト目の上位2ビット）は10₂固定（17桁目の文字列表現は"8","9","A","B"のどれか）
-    digestBytes[8] = (digestBytes[8] as Uint8) & 0x3F | 0x80;
+  //   // clockSeqAndReservedの先頭2ビット（9バイト目の上位2ビット）は10₂固定（17桁目の文字列表現は"8","9","A","B"のどれか）
+  //   digestBytes[8] = (digestBytes[8] as Uint8) & 0x3F | 0x80;
 
-    return new Uuid(digestBytes);
-  }
+  //   return new Uuid(digestBytes);
+  // }
 
   /**
    * Creates an `Uuid` object from a string that represents the UUID.
@@ -210,7 +208,7 @@ class Uuid {
       BytesFormat.format(this.#clockSeqAndReserved, bytesOptions) +
       BytesFormat.format(this.#clockSeqLow, bytesOptions),
       BytesFormat.format(this.#node, bytesOptions),
-    ].join(separator);//TODO #bytes.format()の結果に"-"を差し込めばいい
+    ].join(separator); //TODO #bytes.format()の結果に"-"を差し込めばいい
   }
 
   /**

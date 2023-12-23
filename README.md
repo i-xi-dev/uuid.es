@@ -17,7 +17,7 @@ This module delegates the random bytes generation to the [`Crypto`](https://deve
 ### npm
 
 ```console
-$ npm i @i-xi-dev/uuid@3.0.14
+$ npm i @i-xi-dev/uuid@3.0.15
 ```
 
 ```javascript
@@ -26,15 +26,15 @@ import { Uuid } from "@i-xi-dev/uuid";
 
 ### CDN
 
-Example for Skypack
+Example for UNPKG
 ```javascript
-import { Uuid } from "https://cdn.skypack.dev/@i-xi-dev/uuid@3.0.14";
+import { Uuid } from "https://www.unpkg.com/@i-xi-dev/uuid@3.0.15/esm/mod.js";
 ```
 
 
 ## Usage
 
-### [`Uuid`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/uuid.es/3.0.14/mod.ts/~/Uuid) class
+### [`Uuid`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/uuid.es/3.0.15/mod.ts/~/Uuid) class
 
 #### Creates a version 4 UUID
 ```javascript
@@ -92,3 +92,7 @@ uuidB.equals("urn:uuid:5eb893ba-ec79-4f55-958d-66731227b662");
 ```javascript
 const uuidX = Uuid.fromString(crypto.randomUUID());
 ```
+
+## Examples
+
+- [Parse UUID](https://i-xi-dev.github.io/uuid.es/example/parse.html)
