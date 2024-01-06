@@ -8,7 +8,7 @@ import { _crypto, ByteSequence, BytesFormat, Digest, Uint8 } from "../deps.ts";
  *
  * @see [RFC 4122](https://datatracker.ietf.org/doc/html/rfc4122)
  */
-class Uuid {
+export class Uuid {
   readonly #bytes: ByteSequence;
 
   private constructor(bytes: Uint8Array) {
@@ -264,7 +264,7 @@ class Uuid {
   }
 }
 
-namespace Uuid {
+export namespace Uuid {
   /**
    * The object with the following optional fields.
    */
@@ -289,5 +289,3 @@ namespace Uuid {
     X500: Uuid.fromString("6ba7b814-9dad-11d1-80b4-00c04fd430c8"),
   } as const;
 }
-
-export { Uuid };

@@ -17,7 +17,7 @@ This module delegates the random bytes generation to the [`Crypto`](https://deve
 ### npm
 
 ```console
-$ npm i @i-xi-dev/uuid@3.0.15
+$ npm i @i-xi-dev/uuid@3.0.16
 ```
 
 ```javascript
@@ -28,13 +28,13 @@ import { Uuid } from "@i-xi-dev/uuid";
 
 Example for UNPKG
 ```javascript
-import { Uuid } from "https://www.unpkg.com/@i-xi-dev/uuid@3.0.15/esm/mod.js";
+import { Uuid } from "https://www.unpkg.com/@i-xi-dev/uuid@3.0.16/esm/mod.js";
 ```
 
 
 ## Usage
 
-### [`Uuid`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/uuid.es/3.0.15/mod.ts/~/Uuid) class
+### [`Uuid`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/uuid.es/3.0.16/mod.ts/~/Uuid) class
 
 #### Creates a version 4 UUID
 ```javascript
