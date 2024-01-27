@@ -1,4 +1,4 @@
-import { _crypto, ByteSequence, BytesFormat, Digest, Uint8 } from "../deps.ts";
+import { _crypto, BufferUtils, BytesFormat, Digest, Uint8 } from "../deps.ts";
 
 /**
  * The object representation of UUID.
@@ -9,35 +9,35 @@ import { _crypto, ByteSequence, BytesFormat, Digest, Uint8 } from "../deps.ts";
  * @see [RFC 4122](https://datatracker.ietf.org/doc/html/rfc4122)
  */
 export class Uuid {
-  readonly #bytes: ByteSequence;
+  readonly #bytes: Uint8Array;
 
   private constructor(bytes: Uint8Array) {
-    this.#bytes = ByteSequence.fromArrayBufferView(bytes);
+    this.#bytes = bytes;
     Object.freeze(this);
   }
 
   get #timeLow(): Uint8Array {
-    return Uint8Array.from(this.#bytes.getUint8View(0, 4));
+    return Uint8Array.from(this.#bytes.subarray(0, 4));
   }
 
   get #timeMid(): Uint8Array {
-    return Uint8Array.from(this.#bytes.getUint8View(4, 2));
+    return Uint8Array.from(this.#bytes.subarray(4, 6));
   }
 
   get #timeHighAndVersion(): Uint8Array {
-    return Uint8Array.from(this.#bytes.getUint8View(6, 2));
+    return Uint8Array.from(this.#bytes.subarray(6, 8));
   }
 
   get #clockSeqAndReserved(): Uint8Array {
-    return Uint8Array.from(this.#bytes.getUint8View(8, 1));
+    return Uint8Array.from(this.#bytes.subarray(8, 9));
   }
 
   get #clockSeqLow(): Uint8Array {
-    return Uint8Array.from(this.#bytes.getUint8View(9, 1));
+    return Uint8Array.from(this.#bytes.subarray(9, 10));
   }
 
   get #node(): Uint8Array {
-    return Uint8Array.from(this.#bytes.getUint8View(10));
+    return Uint8Array.from(this.#bytes.subarray(10));
   }
 
   /**
@@ -239,7 +239,7 @@ export class Uuid {
   }
 
   #toUint8Array(): Uint8Array {
-    return this.#bytes.toUint8Array();
+    return Uint8Array.from(this.#bytes);
   }
 
   /**
@@ -251,11 +251,13 @@ export class Uuid {
    */
   equals(other: Uuid | string): boolean {
     if (other instanceof Uuid) {
-      return this.#bytes.equals(other.#bytes);
+      return (this.#bytes.length === other.#bytes.length) &&
+        BufferUtils.bytesAStartsWithBytesB(this.#bytes, other.#bytes); //TODO equalsもBufferUtilsに
     } else if (typeof other === "string") {
       try {
         const otherUuid = Uuid.fromString(other);
-        return this.#bytes.equals(otherUuid.#bytes);
+        return (this.#bytes.length === otherUuid.#bytes.length) &&
+          BufferUtils.bytesAStartsWithBytesB(this.#bytes, otherUuid.#bytes);
       } catch {
         return false;
       }
