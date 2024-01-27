@@ -251,13 +251,11 @@ export class Uuid {
    */
   equals(other: Uuid | string): boolean {
     if (other instanceof Uuid) {
-      return (this.#bytes.length === other.#bytes.length) &&
-        BufferUtils.bytesAStartsWithBytesB(this.#bytes, other.#bytes); //TODO equalsもBufferUtilsに
+      return BufferUtils.bytesAEqualsBytesB(this.#bytes, other.#bytes);
     } else if (typeof other === "string") {
       try {
         const otherUuid = Uuid.fromString(other);
-        return (this.#bytes.length === otherUuid.#bytes.length) &&
-          BufferUtils.bytesAStartsWithBytesB(this.#bytes, otherUuid.#bytes);
+        return BufferUtils.bytesAEqualsBytesB(this.#bytes, otherUuid.#bytes);
       } catch {
         return false;
       }
