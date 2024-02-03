@@ -103,7 +103,7 @@ const uuidX = Uuid.fromString(crypto.randomUUID());
 const namespace = Uuid.Namespace.URL; // 6ba7b811-9dad-11d1-80b4-00c04fd430c8
 const uuid = Uuid.fromName(namespace, "https://example.com/sample/123");
 // uuid.toString();
-// → "7fdb2afb-a771-50eb-a0ae-7f02b933a569"
+//   → "7fdb2afb-a771-50eb-a0ae-7f02b933a569"
 ```
 
 #### Creates a version 3 UUID
@@ -111,7 +111,7 @@ const uuid = Uuid.fromName(namespace, "https://example.com/sample/123");
 const namespace = Uuid.Namespace.URL; // 6ba7b811-9dad-11d1-80b4-00c04fd430c8
 const uuid = Uuid.fromName(namespace, "https://example.com/sample/123", 3);
 // uuid.toString();
-// → "b131a200-1fa6-313e-b5d2-6b7a9b00570c"
+//   → "b131a200-1fa6-313e-b5d2-6b7a9b00570c"
 ```
 
 ## Examples
