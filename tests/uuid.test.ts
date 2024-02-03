@@ -26,6 +26,75 @@ Deno.test("Uuid.generateRandom()", () => {
   assertStrictEquals(uuids.length, (new Set(uuids)).size);
 });
 
+Deno.test("Uuid.fromName(Uuid, string)", async () => {
+  const u1 = await Uuid.fromName(Uuid.Namespace.URL, "string");
+  assertStrictEquals(u1.toString(), "64be9091-88e8-5476-996b-8b541f7bf3e5");
+  assertStrictEquals(u1.type, 2);
+  assertStrictEquals(u1.subtype, 5);
+
+  const u1t = await Uuid.fromName(
+    "6ba7b811-9dad-11d1-80b4-00c04fd430c8",
+    "string",
+  );
+  assertStrictEquals(u1t.toString(), "64be9091-88e8-5476-996b-8b541f7bf3e5");
+  assertStrictEquals(u1t.type, 2);
+  assertStrictEquals(u1t.subtype, 5);
+
+  const u1t2 = await Uuid.fromName(
+    "urn:uuid:6BA7B811-9DAD-11D1-80B4-00C04FD430C8",
+    "string",
+  );
+  assertStrictEquals(u1t2.toString(), "64be9091-88e8-5476-996b-8b541f7bf3e5");
+  assertStrictEquals(u1t2.type, 2);
+  assertStrictEquals(u1t2.subtype, 5);
+
+  const u2 = await Uuid.fromName(Uuid.Namespace.URL, "あ");
+  assertStrictEquals(u2.toString(), "fb641640-27a6-5bda-9a60-110bdf397598");
+  assertStrictEquals(u2.type, 2);
+  assertStrictEquals(u2.subtype, 5);
+});
+
+Deno.test("Uuid.fromName(Uuid, string, 5)", async () => {
+  const u1 = await Uuid.fromName(Uuid.Namespace.URL, "string");
+  assertStrictEquals(u1.toString(), "64be9091-88e8-5476-996b-8b541f7bf3e5");
+  assertStrictEquals(u1.type, 2);
+  assertStrictEquals(u1.subtype, 5);
+
+  const u2 = await Uuid.fromName(Uuid.Namespace.URL, "あ");
+  assertStrictEquals(u2.toString(), "fb641640-27a6-5bda-9a60-110bdf397598");
+  assertStrictEquals(u2.type, 2);
+  assertStrictEquals(u2.subtype, 5);
+
+  const u3 = await Uuid.fromName(
+    Uuid.Namespace.URL,
+    "https://example.com/sample/123",
+  );
+  assertStrictEquals(u3.toString(), "7fdb2afb-a771-50eb-a0ae-7f02b933a569");
+  assertStrictEquals(u3.type, 2);
+  assertStrictEquals(u3.subtype, 5);
+});
+
+Deno.test("Uuid.fromName(Uuid, string, 3)", async () => {
+  const u1 = await Uuid.fromName(Uuid.Namespace.URL, "string", 3);
+  assertStrictEquals(u1.toString(), "724533da-66b6-35a1-ad9e-20205be920e9");
+  assertStrictEquals(u1.type, 2);
+  assertStrictEquals(u1.subtype, 3);
+
+  const u2 = await Uuid.fromName(Uuid.Namespace.URL, "あ", 3);
+  assertStrictEquals(u2.toString(), "72bfcf35-4daf-306d-a757-b3a2ebac5e95");
+  assertStrictEquals(u2.type, 2);
+  assertStrictEquals(u2.subtype, 3);
+
+  const u3 = await Uuid.fromName(
+    Uuid.Namespace.URL,
+    "https://example.com/sample/123",
+    3,
+  );
+  assertStrictEquals(u3.toString(), "b131a200-1fa6-313e-b5d2-6b7a9b00570c");
+  assertStrictEquals(u3.type, 2);
+  assertStrictEquals(u3.subtype, 3);
+});
+
 Deno.test("Uuid.fromString(string) nil 1", () => {
   const uuid = Uuid.fromString("00000000-0000-0000-0000-000000000000");
   assertStrictEquals(uuid.type, 0);

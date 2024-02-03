@@ -1,4 +1,19 @@
-import { _crypto, BufferUtils, BytesFormat, Digest, Uint8 } from "../deps.ts";
+import {
+  _crypto,
+  BufferUtils,
+  BytesFormat,
+  Digest,
+  StringEx,
+  Uint8,
+} from "../deps.ts";
+
+let _encoder: TextEncoder;
+function _encodeText(input: string): Uint8Array {
+  if (!_encoder) {
+    _encoder = new TextEncoder();
+  }
+  return _encoder.encode(input);
+}
 
 /**
  * The object representation of UUID.
@@ -117,47 +132,64 @@ export class Uuid {
     return new Uuid(randomBytes);
   }
 
-  // /** @experimental */
-  // static async fromName(namespace: string | Uuid, name: string): Promise<Uuid> {
-  //   let namespaceBytes: Uint8Array | null = null;
-  //   if (namespace instanceof Uuid) {
-  //     namespaceBytes = namespace.#toUint8Array();
-  //   } else if (typeof namespace === "string") {
-  //     try {
-  //       const namespaceUuid = Uuid.fromString(namespace);
-  //       namespaceBytes = namespaceUuid.#toUint8Array();
-  //     } catch {
-  //       throw new RangeError("namespace");
-  //     }
-  //   } else {
-  //     throw new TypeError("namespace");
-  //   }
+  /**
+   * Creates an `Uuid` object that represents the version 5 or 3 UUID.
+   *
+   * @param namespace - The UUID to be used as namespace ID.
+   * @param name - The name.
+   * @param subtype - The version. Defaults to 5 if omitted.
+   * @returns An `Uuid` object that represents the version 5 or 3 UUID.
+   */
+  static async fromName(
+    namespace: string | Uuid,
+    name: string,
+    subtype: 3 | 5 = 5,
+  ): Promise<Uuid> {
+    let namespaceBytes: Uint8Array | null = null;
+    if (namespace instanceof Uuid) {
+      namespaceBytes = namespace.#toUint8Array();
+    } else if (typeof namespace === "string") {
+      try {
+        const namespaceUuid = Uuid.fromString(namespace);
+        namespaceBytes = namespaceUuid.#toUint8Array();
+      } catch {
+        throw new RangeError("namespace");
+      }
+    } else {
+      throw new TypeError("namespace");
+    }
 
-  //   if (typeof name !== "string") {
-  //     throw new TypeError("name");
-  //   }
-  //   const nameBytes = ByteSequence.fromText(name).toUint8Array();
+    if (StringEx.isString(name) !== true) {
+      throw new TypeError("name");
+    }
+    const nameBytes = _encodeText(name);
 
-  //   const bytes = new Uint8Array(namespaceBytes.length + nameBytes.length);
-  //   for (let i = 0; i < namespaceBytes.length; i++) {
-  //     bytes[i] = namespaceBytes[i];
-  //   }
-  //   const offset = namespaceBytes.length;
-  //   for (let i = 0; i < nameBytes.length; i++) {
-  //     bytes[offset + i] = nameBytes[i];
-  //   }
+    if ([3, 5].includes(subtype) !== true) {
+      throw new TypeError("subtype");
+    }
 
-  //   //TODO optionsでMD5かSHA-1選択可にする
-  //   const digestBytes = await Digest.Sha1.compute(bytes);
+    const bytes = new Uint8Array(namespaceBytes.length + nameBytes.length);
+    bytes.set(namespaceBytes, 0);
+    bytes.set(nameBytes, namespaceBytes.length);
 
-  //   // timeHighAndVersionの先頭4ビット（7バイト目の上位4ビット）は0101₂固定（13桁目の文字列表現は"5"固定）
-  //   digestBytes[6] = (digestBytes[6] as Uint8) & 0x0F | 0x50;
+    const digest = (subtype === 5)
+      ? await Digest.Sha1.compute(bytes)
+      : await Digest.Md5.compute(bytes);
+    const digestBytes = new Uint8Array(digest);
 
-  //   // clockSeqAndReservedの先頭2ビット（9バイト目の上位2ビット）は10₂固定（17桁目の文字列表現は"8","9","A","B"のどれか）
-  //   digestBytes[8] = (digestBytes[8] as Uint8) & 0x3F | 0x80;
+    if (subtype === 5) {
+      // timeHighAndVersionの先頭4ビット（7バイト目の上位4ビット）は0101₂固定（13桁目の文字列表現は"5"固定）
+      digestBytes[6] = (digestBytes[6] as Uint8) & 0x0F | 0x50;
+    } else {
+      // timeHighAndVersionの先頭4ビット（7バイト目の上位4ビット）は0011₂固定（13桁目の文字列表現は"3"固定）
+      digestBytes[6] = (digestBytes[6] as Uint8) & 0x0F | 0x30;
+    }
 
-  //   return new Uuid(digestBytes);
-  // }
+    // clockSeqAndReservedの先頭2ビット（9バイト目の上位2ビット）は10₂固定（17桁目の文字列表現は"8","9","A","B"のどれか）
+    digestBytes[8] = (digestBytes[8] as Uint8) & 0x3F | 0x80;
+
+    return new Uuid(digestBytes.slice(0, 16));
+  }
 
   /**
    * Creates an `Uuid` object from a string that represents the UUID.
@@ -208,7 +240,7 @@ export class Uuid {
       BytesFormat.format(this.#clockSeqAndReserved, bytesOptions) +
       BytesFormat.format(this.#clockSeqLow, bytesOptions),
       BytesFormat.format(this.#node, bytesOptions),
-    ].join(separator); //TODO #bytes.format()の結果に"-"を差し込めばいい
+    ].join(separator);
   }
 
   /**

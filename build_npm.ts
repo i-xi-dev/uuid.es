@@ -15,14 +15,17 @@ await build({
   rootTestDir: "./tests",
   package: {
     name: "@i-xi-dev/uuid",
-    version: "3.0.19",
+    version: "3.1.0",
     description:
-      "A JavaScript UUID generator, implements the version 4 UUID defined in RFC 4122.",
+      "A JavaScript UUID generator, implements the version 3, 4, and 5 UUID defined in RFC 4122.",
     license: "MIT",
     author: "i-xi-dev",
     homepage: "https://github.com/i-xi-dev/uuid.es#readme",
     keywords: [
       "uuid",
+      "uuid-v3",
+      "uuid-v4",
+      "uuid-v5",
       "browser",
       "deno",
       "nodejs",
