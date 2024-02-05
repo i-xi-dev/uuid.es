@@ -191,6 +191,17 @@ export class Uuid {
     return new Uuid(digestBytes.slice(0, 16));
   }
 
+  // /**
+  //  * Creates an `Uuid` object that represents the draft version of version 7 UUID.
+  //  * 
+  //  * @experimental
+  //  */
+  // static x7(): Uuid {
+  //   // Firefoxが1ミリ秒精度なので、1ミリ秒精度とする
+
+  //   const millis = Math.trunc(globalThis.performance.timeOrigin + globalThis.performance.now());
+  // }
+
   /**
    * Creates an `Uuid` object from a string that represents the UUID.
    *
