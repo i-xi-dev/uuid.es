@@ -15,9 +15,9 @@ await build({
   rootTestDir: "./tests",
   package: {
     name: "@i-xi-dev/uuid",
-    version: "3.1.0",
+    version: "3.2.0",
     description:
-      "A JavaScript UUID generator, implements the version 3, 4, and 5 UUID defined in RFC 4122.",
+      "A JavaScript UUID generator, implements the version 3, 4, and 5 UUID defined in RFC 4122. And this generator implements version 7 draft proposed in RFC 4122 bis.",
     license: "MIT",
     author: "i-xi-dev",
     homepage: "https://github.com/i-xi-dev/uuid.es#readme",

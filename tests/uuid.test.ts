@@ -8,6 +8,13 @@ Deno.test("Uuid.nil()", () => {
   assertStrictEquals(uuid.toString(), "00000000-0000-0000-0000-000000000000");
 });
 
+// Deno.test("Uuid.max()", () => {
+//   const uuid = Uuid.max();
+//   assertStrictEquals(uuid.type, 7);
+//   assertEquals(uuid.subtype, Number.NaN);
+//   assertStrictEquals(uuid.toString(), "ffffffff-ffff-ffff-ffff-ffffffffffff");
+// });
+
 Deno.test("Uuid.generateRandom()", () => {
   const uuids = [];
   for (let i = 0; i < 100; i++) {
@@ -217,6 +224,21 @@ Deno.test("Uuid.prototype.type - 7", () => {
   assertStrictEquals(uuid.type, 7);
 });
 
+Deno.test("Uuid.prototype.subtype - 8", () => {
+  const uuid = Uuid.fromString("00000000-0000-8000-9000-000000000000");
+  assertStrictEquals(uuid.subtype, 8);
+});
+
+Deno.test("Uuid.prototype.subtype - 7", () => {
+  const uuid = Uuid.fromString("00000000-0000-7000-9000-000000000000");
+  assertStrictEquals(uuid.subtype, 7);
+});
+
+Deno.test("Uuid.prototype.subtype - 6", () => {
+  const uuid = Uuid.fromString("00000000-0000-6000-9000-000000000000");
+  assertStrictEquals(uuid.subtype, 6);
+});
+
 Deno.test("Uuid.prototype.subtype - 5", () => {
   const uuid = Uuid.fromString("00000000-0000-5000-9000-000000000000");
   assertStrictEquals(uuid.subtype, 5);
@@ -293,5 +315,42 @@ Deno.test("Uuid.prototype.equals(*)", () => {
     },
     TypeError,
     "other",
+  );
+});
+
+Deno.test("Uuid.generateUnixTimeBased()", () => {
+  const uuid = Uuid.generateUnixTimeBased();
+  //console.log(uuid.toString());
+  assertStrictEquals(uuid.type, 2);
+  assertStrictEquals(uuid.variant, 2);
+  assertStrictEquals(uuid.subtype, 7);
+  assertStrictEquals(uuid.version, 7);
+
+  let prev = Uuid.nil().toString();
+  let curr = "";
+  for (let i = 0; i <= 0xFFF; i++) {
+    curr = Uuid.generateUnixTimeBased().toString();
+    assertStrictEquals(curr > prev, true);
+    prev = curr;
+  }
+});
+
+Deno.test("Uuid.prototype.unixTimeMilliseconds", async () => {
+  // const uuid = Uuid.generateUnixTimeBased();
+  // console.log(new Date(uuid.unixTimeMilliseconds).toISOString());
+
+  assertStrictEquals(
+    Number.isFinite(Uuid.generateUnixTimeBased().unixTimeMilliseconds),
+    true,
+  );
+  assertStrictEquals(
+    Number.isFinite(Uuid.generateRandom().unixTimeMilliseconds),
+    false,
+  );
+  assertStrictEquals(
+    Number.isFinite(
+      (await Uuid.fromName(Uuid.Namespace.URL, "a")).unixTimeMilliseconds,
+    ),
+    false,
   );
 });

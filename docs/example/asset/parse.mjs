@@ -1,5 +1,5 @@
-import { Uuid } from "https://www.unpkg.com/@i-xi-dev/uuid@3.1.0/esm/mod.js";
-// https://cdn.skypack.dev/@i-xi-dev/uuid@3.1.0
+import { Uuid } from "https://www.unpkg.com/@i-xi-dev/uuid@3.2.0/esm/mod.js";
+// https://cdn.skypack.dev/@i-xi-dev/uuid@3.2.0
 
 const i1 = document.getElementById("i1");
 const i1a1 = document.getElementById("i1a1");

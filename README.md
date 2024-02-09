@@ -1,11 +1,11 @@
 # @i-xi-dev/uuid
 
-A JavaScript UUID generator, implements the version 3, 4, and 5 UUID defined in [RFC 4122](https://datatracker.ietf.org/doc/rfc4122/).
+A JavaScript UUID generator, implements the version 3, 4, and 5 UUID defined in [RFC 4122](https://datatracker.ietf.org/doc/rfc4122/). And this generator implements version 7 draft proposed in RFC 4122 bis.
 
 
 ## Requirement
 
-### `Uuid.generateRandom` methods
+### `Uuid.generateRandom` and `Uuid.generateUnixTimeBased` methods
 
 This requires [`Crypto`](https://developer.mozilla.org/en-US/docs/Web/API/Crypto).
 
@@ -28,7 +28,7 @@ Generating version 5 requires [`SubtleCrypto`](https://developer.mozilla.org/en-
 ### npm
 
 ```console
-$ npm i @i-xi-dev/uuid@3.1.0
+$ npm i @i-xi-dev/uuid@3.2.0
 ```
 
 ```javascript
@@ -39,13 +39,13 @@ import { Uuid } from "@i-xi-dev/uuid";
 
 Example for UNPKG
 ```javascript
-import { Uuid } from "https://www.unpkg.com/@i-xi-dev/uuid@3.1.0/esm/mod.js";
+import { Uuid } from "https://www.unpkg.com/@i-xi-dev/uuid@3.2.0/esm/mod.js";
 ```
 
 
 ## Usage
 
-### [`Uuid`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/uuid.es/3.1.0/mod.ts/~/Uuid) class
+### [`Uuid`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/uuid.es/3.2.0/mod.ts/~/Uuid) class
 
 #### Creates a version 4 UUID
 ```javascript
@@ -113,6 +113,21 @@ const uuid = await Uuid.fromName(namespace, "https://example.com/sample/123", 3)
 // uuid.toString();
 //   → "b131a200-1fa6-313e-b5d2-6b7a9b00570c"
 ```
+
+#### Creates a version 7 UUID proposal
+```javascript
+const uuid = Uuid.generateUnixTimeBased();
+// uuid.toString();
+//   → for example "018d8e7b-f31f-7000-98b7-4593649d25e1"
+// new Date(uuid.unixTimeMilliseconds).toISOString();
+//   → for example "2024-02-09T15:28:24.351Z"
+```
+
+The precision of the time is the greater of the following:
+- 1 millisecond
+- The precision of the time of `performance.now()` in execution environment
+
+Note that some browsers have `performance.now()` precision greater than 1 millisecond, depending on settings and other factors.
 
 ## Examples
 

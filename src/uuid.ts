@@ -3,6 +3,7 @@ import {
   BufferUtils,
   BytesFormat,
   Digest,
+  SafeInteger,
   StringEx,
   Uint8,
 } from "../deps.ts";
@@ -15,6 +16,14 @@ function _encodeText(input: string): Uint8Array {
   return _encoder.encode(input);
 }
 
+const _timeOrigin = globalThis.performance.timeOrigin;
+
+function _timestamp(): SafeInteger {
+  // performance.nowの精度がミリ秒に下がった実装が多いが、単調増加することは保証されているのでDate.now()ではなくこちらを採用
+  // ただし、fingerprint対策で精度をさらに下げるよう設定できる実装が存在する（少なくともFirefox）
+  return Math.trunc(_timeOrigin + globalThis.performance.now());
+}
+
 /**
  * The object representation of UUID.
  * The `Uuid` instances are immutable.
@@ -25,6 +34,10 @@ function _encodeText(input: string): Uint8Array {
  */
 export class Uuid {
   readonly #bytes: Uint8Array;
+
+  static #prevV7Timestamp: SafeInteger = 0;
+
+  static #v7Counter: SafeInteger = 0;
 
   private constructor(bytes: Uint8Array) {
     this.#bytes = bytes;
@@ -84,15 +97,23 @@ export class Uuid {
   get subtype(): number {
     if (this.type === 2) {
       const byte6 = this.#timeHighAndVersion[0] as Uint8;
-      if ((byte6 & 0b01010000) === 0b01010000) {
+      //TODO ドラフトでは15までは予約されてる
+      //TODO 網羅しなくても計算できる
+      if ((byte6 & 0b1000_0000) === 0b1000_0000) {
+        return 8;
+      } else if ((byte6 & 0b0111_0000) === 0b0111_0000) {
+        return 7;
+      } else if ((byte6 & 0b0110_0000) === 0b0110_0000) {
+        return 6;
+      } else if ((byte6 & 0b0101_0000) === 0b0101_0000) {
         return 5;
-      } else if ((byte6 & 0b01000000) === 0b01000000) {
+      } else if ((byte6 & 0b0100_0000) === 0b0100_0000) {
         return 4;
-      } else if ((byte6 & 0b00110000) === 0b00110000) {
+      } else if ((byte6 & 0b0011_0000) === 0b0011_0000) {
         return 3;
-      } else if ((byte6 & 0b00100000) === 0b00100000) {
+      } else if ((byte6 & 0b0010_0000) === 0b0010_0000) {
         return 2;
-      } else if ((byte6 & 0b00010000) === 0b00010000) {
+      } else if ((byte6 & 0b0001_0000) === 0b0001_0000) {
         return 1;
       }
     }
@@ -107,6 +128,19 @@ export class Uuid {
   }
 
   /**
+   * Timestamp of when the UUID was generated if the UUID version is 7.
+   * If the UUID version is not 7, returns `NaN`.
+   */
+  get unixTimeMilliseconds(): number {
+    if (this.subtype === 7) {
+      let work = (new DataView(this.#bytes.buffer)).getBigUint64(0);
+      work = work >> 16n;
+      return Number(work);
+    }
+    return Number.NaN;
+  }
+
+  /**
    * Creates an `Uuid` object that represents the [nil UUID](https://datatracker.ietf.org/doc/html/rfc4122#section-4.1.7).
    *
    * @returns An `Uuid` object that represents the nil UUID.
@@ -114,6 +148,17 @@ export class Uuid {
   static nil(): Uuid {
     return new Uuid(new Uint8Array(16));
   }
+
+  // /**
+  //  * Creates an `Uuid` object that represents the max UUID proposal.
+  //  *
+  //  * @experimental
+  //  */
+  // static max(): Uuid {
+  //   const bytes = new Uint8Array(16);
+  //   bytes.fill(0xFF);
+  //   return new Uuid(bytes);
+  // }
 
   /**
    * Creates an `Uuid` object that represents the version 4 UUID.
@@ -191,16 +236,42 @@ export class Uuid {
     return new Uuid(digestBytes.slice(0, 16));
   }
 
-  // /**
-  //  * Creates an `Uuid` object that represents the draft version of version 7 UUID.
-  //  * 
-  //  * @experimental
-  //  */
-  // static x7(): Uuid {
-  //   // Firefoxが1ミリ秒精度なので、1ミリ秒精度とする
+  /**
+   * Creates an `Uuid` object that represents the version 7 UUID proposal.
+   *
+   * @experimental
+   */
+  static generateUnixTimeBased(): Uuid {
+    const bytes = _crypto.getRandomValues(new Uint8Array(16));
 
-  //   const millis = Math.trunc(globalThis.performance.timeOrigin + globalThis.performance.now());
-  // }
+    // 先頭48ビットにミリ秒精度の現在時刻をビッグエンディアンでセット
+    const millis = _timestamp();
+    const workBuffer = new ArrayBuffer(8);
+    const workView = new DataView(workBuffer);
+    workView.setBigUint64(0, BigInt(millis));
+    bytes.set(new Uint8Array(workBuffer, 2), 0);
+
+    // 仕様上ミリ秒未満ナノ秒までをセットすることもできるが、
+    // ミリ秒未満をブラウザで確実に取る方法が結局のところ無いので、
+    // RFC4122bisの6.2の方法1を実装する（rand_aをランダム値ではなくタイムスタンプが前回と同じ場合+1するカウンターとする）
+    if (this.#prevV7Timestamp === millis) {
+      this.#v7Counter = this.#v7Counter + 1;
+    } else {
+      this.#prevV7Timestamp = millis;
+      this.#v7Counter = 0;
+    }
+    workView.setBigUint64(0, 0n);
+    workView.setUint16(0, this.#v7Counter);
+    bytes.set(new Uint8Array(workBuffer, 0, 2), 6);
+
+    // timeHighAndVersionの先頭4ビット（7バイト目の上位4ビット）は0111₂固定（13桁目の文字列表現は"7"固定）
+    bytes[6] = (bytes[6] as Uint8) & 0x0F | 0x70;
+
+    // clockSeqAndReservedの先頭2ビット（9バイト目の上位2ビット）は10₂固定（17桁目の文字列表現は"8","9","A","B"のどれか）
+    bytes[8] = (bytes[8] as Uint8) & 0x3F | 0x80;
+
+    return new Uuid(bytes);
+  }
 
   /**
    * Creates an `Uuid` object from a string that represents the UUID.
