@@ -26,6 +26,7 @@ await build({
       "uuid-v3",
       "uuid-v4",
       "uuid-v5",
+      "uuid-v7",
       "browser",
       "deno",
       "nodejs",
