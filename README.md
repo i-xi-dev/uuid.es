@@ -28,7 +28,7 @@ Generating version 5 requires [`SubtleCrypto`](https://developer.mozilla.org/en-
 ### npm
 
 ```console
-$ npm i @i-xi-dev/uuid@3.2.0
+$ npm i @i-xi-dev/uuid@3.2.2
 ```
 
 ```javascript
@@ -39,13 +39,13 @@ import { Uuid } from "@i-xi-dev/uuid";
 
 Example for UNPKG
 ```javascript
-import { Uuid } from "https://www.unpkg.com/@i-xi-dev/uuid@3.2.0/esm/mod.js";
+import { Uuid } from "https://www.unpkg.com/@i-xi-dev/uuid@3.2.2/esm/mod.js";
 ```
 
 
 ## Usage
 
-### [`Uuid`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/uuid.es/3.2.0/mod.ts/~/Uuid) class
+### [`Uuid`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/uuid.es/3.2.2/mod.ts/~/Uuid) class
 
 #### Creates a version 4 UUID
 ```javascript

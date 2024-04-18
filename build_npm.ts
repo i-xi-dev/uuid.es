@@ -15,7 +15,7 @@ await build({
   rootTestDir: "./tests",
   package: {
     name: "@i-xi-dev/uuid",
-    version: "3.2.0",
+    version: "3.2.2",
     description:
       "A JavaScript UUID generator, implements the version 3, 4, and 5 UUID defined in RFC 4122. And this generator implements version 7 draft proposed in RFC 4122 bis.",
     license: "MIT",
@@ -42,10 +42,10 @@ await build({
     publishConfig: {
       access: "public",
     },
-    files: [
-      "esm",
-      "types",
-    ],
+    // files: [
+    //   "esm",
+    //   "types",
+    // ],
   },
   typeCheck: "both",
   declaration: "inline",
